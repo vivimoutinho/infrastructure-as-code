@@ -1,0 +1,28 @@
+---
+- name: Install 3CX Phone System
+  hosts: all
+  become: yes
+  tasks:
+    - name: Import 3CX GPG key
+      apt_key:
+        url: https://repo.3cx.com/key.pub
+        state: present
+
+    - name: Add 3CX Debian Repository
+      apt_repository:
+        repo: "deb http://repo.3cx.com/debian/1804 bullseye main" # Exemplo para Debian/Ubuntu
+        state: present
+        filename: 3cxpbx
+
+    - name: Update apt cache after adding 3cx repo
+      apt:
+        update_cache: yes
+
+    - name: Install 3CX PBX Package
+      apt:
+        name: 3cxpbx
+        state: present
+
+    - name: Display completion message
+      debug:
+        msg: "3CX Installation finished. Access the web console to complete setup."
