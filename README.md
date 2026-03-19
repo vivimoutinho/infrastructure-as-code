@@ -1,28 +1,31 @@
-# Infrastructure as Code: AWS Networking Blueprints
+# Infrastructure as Code (IaC) - Telephony & Networking Blueprints
 
-This repository contains production-ready Terraform modules for deploying scalable and secure infrastructure on AWS.
+This repository demonstrates a complete infrastructure lifecycle for mission-critical telephony systems (3CX) hosted on AWS. It combines infrastructure provisioning with automated configuration management.
 
-## Purpose
-To demonstrate a professional approach to Infrastructure as Code (IaC), focusing on modularity, resource tagging, and cloud architecture best practices.
+## Architecture Stack
 
-## Technical Architecture
-* **Provider:** HashiCorp Terraform
-* **Cloud Platform:** AWS
-* **Components:**
-    * **VPC:** Custom Virtual Private Cloud with DNS support enabled.
-    * **Subnets:** Segmented public/private networking strategy.
-    * **Tagging Policy:** Consistent resource tagging for cost allocation and traceability.
-
-## Design Decisions
-1. **State Management:** Designed to support remote state backends (S3/DynamoDB) for team collaboration.
-2. **Security:** Implemented specific CIDR blocks to ensure network isolation between tiers.
-3. **Variables:** All parameters are abstracted into a `variables.tf` file to allow environment-specific deployments (Dev/Staging/Prod).
-
-## How to use
-1. Install Terraform.
-2. Run `terraform init` to initialize providers.
-3. Run `terraform plan` to preview infrastructure changes.
-4. Run `terraform apply` to deploy to AWS.
+* **Provisioning:** Terraform (AWS Provider)
+* **Configuration Management:** Ansible
+* **Environment:** Amazon Linux / Ubuntu Server
+* **Target Application:** 3CX IP PBX
 
 ---
-*Developed with a focus on high-availability and operational consistency.*
+
+## 1. Infrastructure Provisioning (Terraform)
+Located in the `/terraform` directory, this layer handles the networking baseline:
+* **VPC & Subnets:** Custom network isolation for telephony traffic.
+* **Security Groups:** Automated firewall rules at the cloud level.
+* **Resources:** Scalable EC2 instances with consistent tagging for cost governance.
+
+## 2. Server Configuration (Ansible)
+Located in the `/ansible` directory, this layer automates the OS-level hardening and 3CX prerequisites:
+* **Security:** Automated UFW firewall configuration for SIP (5060/5061) and RTP (9000-9500) ports.
+* **System Optimization:** Timezone synchronization and dependency management.
+* **Reliability:** Ensuring every server is deployed with a consistent, repeatable configuration.
+
+## Operational Workflow
+1. **Provision:** Execute `terraform apply` to create the VPC and EC2 instances.
+2. **Configure:** Run `ansible-playbook setup-3cx-server.yml` to prepare the instances for 3CX.
+
+---
+*Developed by Vivian Moutinho | Focus: High Availability, Automation, and Operational Consistency.*
