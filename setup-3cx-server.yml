@@ -1,0 +1,14 @@
+---
+- name: Prepare Linux Server for 3CX
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update system packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+    - name: Open 3CX Firewall Ports (SIP/RTP)
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+      loop: ['5060', '5090', '9000:9500']
